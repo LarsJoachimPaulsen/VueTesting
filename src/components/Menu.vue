@@ -49,16 +49,19 @@
                     </tbody>
                 </table>
                 <p>Order total: </p>
-                <button class ="btn_green">Place Order</button>
+                <button class ="btn_green" @click="addNewOrder">Place Order</button>
             </div>
             <div v-else>
-                <p>{{basketText}}</p>
+                <p>{{basketText}}</p> 
             </div>
         </div>
     </div>
 </template>
 
 <script>
+
+import {mapGetters} from 'vuex'
+
 export default {
     name: "menu",
     data(){
@@ -68,9 +71,9 @@ export default {
         }
     }, 
     computed: {
-        getMenuItems(){
-            return this.$store.getters.getMenuItems;
-        }
+        ...mapGetters([
+            'getMenuItems'
+        ])
     },
     methods: {
         async addToBasket(item, option){
@@ -101,6 +104,11 @@ export default {
                 return;
             }
             item.quantity--;
+        }, 
+        addNewOrder(){
+            this.$store.commit('addOrder', this.basket);
+            this.basket=[]; 
+            this.basketText = 'Thank you! Your order has been placed'
         }
     },
 }
